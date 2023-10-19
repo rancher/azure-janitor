@@ -8,11 +8,11 @@ import (
 )
 
 type Input struct {
-	ResourceGroupPattern string `env:"INPUT_RESOURCE_GROUPS"`
-	AzureSubscriptionID  string `env:"INPUT_SUBSCRIPTION_ID"`
-	AzureClientID        string `env:"INPUT_CLIENT_ID"`
-	AzureClientSecret    string `env:"INPUT_CLIENT_SECRET"`
-	AzureTenantID        string `env:"INPUT_TENANT_ID"`
+	ResourceGroupPattern string `env:"INPUT_RESOURCE-GROUPS"`
+	AzureSubscriptionID  string `env:"INPUT_SUBSCRIPTION-ID"`
+	AzureClientID        string `env:"INPUT_CLIENT-ID"`
+	AzureClientSecret    string `env:"INPUT_CLIENT-SECRET"`
+	AzureTenantID        string `env:"INPUT_TENANT-ID"`
 	Commit               bool   `env:"INPUT_COMMIT"`
 }
 
