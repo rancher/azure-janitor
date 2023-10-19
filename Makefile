@@ -26,6 +26,14 @@ ACTION_IMAGE_NAME ?= azure-janitor
 ACTION_IMG ?= $(REGISTRY)/$(ORG)/$(ACTION_IMAGE_NAME)
 MANIFEST_IMG ?= $(ACTION_IMG)-$(ARCH)
 
+.PHONY: test
+test:
+	go test ./...
+
+.PHONY: build
+build:
+	go build -o bin/azure-janitor main.go
+
 ## --------------------------------------
 ## Docker
 ## --------------------------------------
