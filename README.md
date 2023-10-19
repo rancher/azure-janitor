@@ -7,8 +7,8 @@ A GitHub Action to cleanup Azure Resource Groups.
 ## Inputs
 
 | Name            | Required | Description                                                           |
-| --------------- | -------- | ------------------------------------------------------------------_-- |
-| resource-groups | Y        | A pattern for the resource groups to delete (e.g. `e2e*`)  |
+| --------------- | -------- | --------------------------------------------------------------------- |
+| resource-groups | Y        | A pattern for the resource groups to delete (e.g. `e2e*`)             |
 | subscription-id | Y        | The azure subscription id                                             |
 | client-id       | Y        | The azure client id to use                                            |
 | client-secret   | Y        | The azure client secret to use                                        |
