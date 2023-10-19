@@ -19,18 +19,11 @@ inputs:
     required: true
   commit:
     description: 'Should the action just report or do the actual delete'
-    required: true
+    required: false
     default: 'false'
 runs:
   using: 'docker'
-  image: 'Dockerfile'
-  args:
-    - ${{ inputs.resource-groups }}
-    - ${{ inputs.subscription-id}}
-    - ${{ inputs.client-id}}
-    - ${{ inputs.client-secret}}
-    - ${{ inputs.tenant-id}}
-    - ${{ inputs.commit }}
+  image: 'docker://ghcr.io/rancher-sandbox/azure-janitor:v0.1.0'
 branding:
   icon: 'delete'
   color: 'blue'
