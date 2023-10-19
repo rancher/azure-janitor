@@ -73,6 +73,24 @@ var _ = Describe("Test Azure Janitor", func() {
 			Expect(rg).Should(ContainElements("rg1", "rg2"))
 		})
 	})
+
+	Describe("Cleaning up a single resource group with commit false", func() {
+		It("should not delete the resource group", func() {
+			fc := &fakeResourcesClient{
+				existingGroups: []string{"e2e-1", "rg2"},
+			}
+
+			a, err := action.New(fc)
+			Expect(err).NotTo(HaveOccurred())
+
+			err = a.Cleanup(context.TODO(), "e2e*", false)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(fc.DeleteCalled()).To(BeFalse())
+			rg := fc.ResourceGroups()
+			Expect(rg).To(HaveLen(2))
+			Expect(rg).Should(ContainElements("e2e-1", "rg2"))
+		})
+	})
 })
 
 type fakeResourcesClient struct {
