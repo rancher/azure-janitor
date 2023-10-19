@@ -1,0 +1,36 @@
+name: 'Azure Janitor'
+author: 'Rancher Sandbox'
+description: 'Clean-up Azure resource groups.'
+inputs: 
+  resource-groups:
+    description: 'The string pattern to match resource groups to delete (e.g. e2e-*).'
+    required: true
+  subscription-id:
+    description: 'The azure subscription id to use'
+    required: true
+  client-id:
+    description: 'The azure client id to use'
+    required: true
+  client-secret:
+    description: 'The azure client secret to use'
+    required: true
+  tenant-id:
+    description: 'The azure tenant id to use'
+    required: true
+  commit:
+    description: 'Should the action just report or do the actual delete'
+    required: true
+    default: 'false'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.resource-groups }}
+    - ${{ inputs.subscription-id}}
+    - ${{ inputs.client-id}}
+    - ${{ inputs.client-secret}}
+    - ${{ inputs.tenant-id}}
+    - ${{ inputs.commit }}
+branding:
+  icon: 'delete'
+  color: 'blue'
