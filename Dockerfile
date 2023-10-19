@@ -1,16 +1,41 @@
-FROM golang:1.21 AS builder
+# Build the manager binary
+ARG builder_image
 
-ENV GO111MODULE=on \
-    CGO_ENABLED=0
+# Build architecture
+ARG ARCH
 
-WORKDIR /src
-COPY . .
+FROM ${builder_image} as builder
+WORKDIR /workspace
 
-RUN go build  .
+# Run this with docker build --build-arg goproxy=$(go env GOPROXY) to override the goproxy
+ARG goproxy=https://proxy.golang.org
+# Run this with docker build --build-arg package=./controlplane or --build-arg package=./bootstrap
+ENV GOPROXY=$goproxy
 
-FROM scratch
+# Copy the Go Modules manifests
+COPY go.mod go.mod
+COPY go.sum go.sum
 
-COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=builder /src/azure-janitor /azure-janitor
+# Cache deps before building and copying source so that we don't need to re-download as much
+# and so that source changes don't invalidate our downloaded layer
+RUN --mount=type=cache,target=/go/pkg/mod \
+    go mod download
 
+COPY ./ ./
+
+ARG package=.
+ARG ARCH
+ARG ldflags
+
+RUN --mount=type=cache,target=/go/pkg/mod \
+    CGO_ENABLED=0 GOOS=linux GOARCH=${ARCH} \
+    go build -trimpath -ldflags "${ldflags} -extldflags '-static'" \
+    -o azure-janitor .
+
+FROM gcr.io/distroless/static:nonroot-${ARCH}
+LABEL org.opencontainers.image.source=https://github.com/rancher-sandbox/azure-janitor
+WORKDIR /
+COPY --from=builder /workspace/azure-janitor .
+# Use uid of nonroot user (65532) because kubernetes expects numeric user when applying pod security policies
+USER 65532
 ENTRYPOINT ["/azure-janitor"]
