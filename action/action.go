@@ -23,7 +23,7 @@ type action struct {
 }
 
 func (a *action) Cleanup(ctx context.Context, resourceGroupPattern string, commit bool) error {
-	Log("cleaning up resource groups with pattern %s", resourceGroupPattern)
+	Log("cleaning up resource groups with pattern %s (commit=%t)", resourceGroupPattern, commit)
 
 	LogDebug("Getting list of Azure resource groups")
 	pager := a.client.NewListPager(nil)
