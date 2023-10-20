@@ -24,9 +24,9 @@ jobs:
     name: Cleanup resource groups
     steps:
       - name: Cleanup
-        uses: ghcr.io/rancher-sandbox/azure-janitor@abcdef1234
+        uses: rancher-sandbox/azure-janitor@v0.1.1
         with:
-            resource-groups: e2e*
+            resource-groups: highlander-e2e*
             subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID}}
             client-id: ${{ secrets.AZURE_CLIENT_ID}}
             client-secret: ${{ secrets.AZURE_CLIENT_SECRET}}
