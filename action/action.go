@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"regexp"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/resources/armresources"
 )
 
@@ -12,14 +13,19 @@ type AzureJanitorAction interface {
 	Cleanup(ctx context.Context, resourceGroupPattern string, commit bool) error
 }
 
-func New(client *armresources.ResourceGroupsClient) (AzureJanitorAction, error) {
+type ResourceGroupsClient interface {
+	NewListPager(options *armresources.ResourceGroupsClientListOptions) *runtime.Pager[armresources.ResourceGroupsClientListResponse]
+	BeginDelete(ctx context.Context, resourceGroupName string, options *armresources.ResourceGroupsClientBeginDeleteOptions) (*runtime.Poller[armresources.ResourceGroupsClientDeleteResponse], error)
+}
+
+func New(client ResourceGroupsClient) (AzureJanitorAction, error) {
 	return &action{
 		client: client,
 	}, nil
 }
 
 type action struct {
-	client *armresources.ResourceGroupsClient
+	client ResourceGroupsClient
 }
 
 func (a *action) Cleanup(ctx context.Context, resourceGroupPattern string, commit bool) error {
