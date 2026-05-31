@@ -33,7 +33,7 @@ func (a *action) cleanupResourceGroup(ctx context.Context, rg *armresources.Reso
 		return fmt.Errorf("failed to delete resource group: %w", err)
 	}
 
-	Log("Succesfully deleted resource group %s", *rg.Name)
+	Log("Successfully deleted resource group %s", *rg.Name)
 
 	return nil
 }
